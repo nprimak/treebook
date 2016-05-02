@@ -27,7 +27,8 @@ class StatusesController < ApplicationController
     @status = Status.new(status_params)
 
     respond_to do |format|
-      if @status.save
+      if @status.user == current_user
+        @status.save
         format.html { redirect_to @status, notice: 'Status was successfully created.' }
         format.json { render :show, status: :created, location: @status }
       else
@@ -37,11 +38,10 @@ class StatusesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /statuses/1
-  # PATCH/PUT /statuses/1.json
   def update
     respond_to do |format|
-      if @status.update(status_params)
+      if@status.user == current_user
+        @status.update(status_params)
         format.html { redirect_to @status, notice: 'Status was successfully updated.' }
         format.json { render :show, status: :ok, location: @status }
       else
@@ -51,20 +51,22 @@ class StatusesController < ApplicationController
     end
   end
 
-  # DELETE /statuses/1
-  # DELETE /statuses/1.json
   def destroy
-    @status.destroy
-    respond_to do |format|
+    if @status.user == current_user
+      @status.destroy
+      respond_to do |format|
       format.html { redirect_to statuses_url, notice: 'Status was successfully destroyed.' }
       format.json { head :no_content }
+      end
+    else
+      redirect_to statuses_path
     end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_status
-      @status = Status.find(params[:id])
+        @status = Status.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
