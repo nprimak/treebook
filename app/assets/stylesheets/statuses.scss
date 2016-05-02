@@ -26,3 +26,9 @@ $light-grey: #FAFAFA;
     }
     
 }
+
+.post-status {
+    margin-bottom: $padding-small * 10;
+    padding: $padding-small * 3;
+    text-transform: uppercase;
+}
